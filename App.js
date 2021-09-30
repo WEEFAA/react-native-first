@@ -14,12 +14,10 @@ const Home = () => {
       <Text style={{fontSize: 24}}>Hello {name}, let's do React Native!!!</Text>
       <TextInput
         style={{textAlign: 'center', fontSize: 18}}
-        placeholder="What is your name"
+        placeholder="What is your name?"
         clearTextOnFocus
         onChangeText={onChange}
       />
-      <Specifications />
-      <Push count={100} style={{width: '100%'}}/>
     </View>
   );
 };
