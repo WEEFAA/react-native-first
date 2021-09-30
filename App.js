@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, TextInput } from 'react-native';
 import { Push } from './components/FlatList'
 import { Specifications } from './components/Platform'
+import Todo, { TodoButton, TodoInput } from './components/Todo'
+
 const Home = () => {
   const [name, setName] = React.useState('????');
 
@@ -10,14 +12,11 @@ const Home = () => {
   };
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{fontSize: 24}}>Hello {name}, let's do React Native!!!</Text>
-      <TextInput
-        style={{textAlign: 'center', fontSize: 18}}
-        placeholder="What is your name?"
-        clearTextOnFocus
-        onChangeText={onChange}
-      />
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 40}}>
+      <Todo>
+        <TodoInput />
+        <TodoButton />
+      </Todo>
     </View>
   );
 };

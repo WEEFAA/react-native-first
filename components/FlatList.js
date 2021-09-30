@@ -1,18 +1,26 @@
 import React from 'react'
-import { FlatList, Text } from 'react-native'
+import { FlatList, Text, View, StyleSheet } from 'react-native'
 
-export const Push = function ({count = 0, ...props}) {
-  const data = Array(count)
-    .fill(0)
-    .map((_, index) => index + 1);
-
+const styles = StyleSheet.create({
+    container: {
+        flex:1,
+        marginVertical: 10
+    },
+    item: {
+        fontSize: 24, 
+        width: '100%', 
+        textAlign: 'center',
+        paddingHorizontal: 5,
+        paddingVertical: 8,
+        borderWidth: 1.5,
+        borderColor: "#9AC2C5"
+    }
+})
+export const Push = function ({data = [], ...props}) {
   const renderItem = ({item}) => {
     return (
-      <Text
-        children={`Item ${item}`}
-        style={{fontSize: 24, width: '100%', textAlign: 'left'}}
-      />
+      <Text style={styles.item}>{item}</Text>
     );
   };
-  return <FlatList {...props} data={data} renderItem={renderItem} />;
+  return <FlatList style={styles.container} {...props} data={data} renderItem={renderItem} />;
 };
