@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TextInput } from 'react-native';
 import { Push } from './components/FlatList'
-
+import { Specifications } from './components/Platform'
 const Home = () => {
   const [name, setName] = React.useState('????');
 
@@ -18,6 +18,7 @@ const Home = () => {
         clearTextOnFocus
         onChangeText={onChange}
       />
+      <Specifications />
       <Push count={100} style={{width: '100%'}}/>
     </View>
   );
