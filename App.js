@@ -19,12 +19,16 @@ const styles = StyleSheet.create({
 });
 
 const Home = () => {
+  const detailOptions =  props => ({ 
+    title: props.route.params.title
+  })
+          
   return (
     <NavigationContainer>
       <View style={styles.container}>
         <Stack.Navigator initialRouteName={NAVS.POPULAR_MOVIES}>
           <Stack.Screen name={NAVS.POPULAR_MOVIES} component={PopularMovies} />
-          <Stack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} />
+          <Stack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} options={detailOptions} />
         </Stack.Navigator>
       </View>
     </NavigationContainer>
