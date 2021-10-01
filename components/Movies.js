@@ -2,16 +2,13 @@ import React from 'react'
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Push } from './FlatList'
 import { Text, View, StyleSheet, Image } from 'react-native'
-import Theme, { EggShell } from './../styles'
+import Theme from './../styles'
 import { Loading } from './Loading'
+import { Container } from './Container'
 
 const PopularMovieContext = React.createContext({})
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: EggShell
-    },
     itemsContainer: {
         flex: 1,
         paddingHorizontal: 10,
@@ -56,7 +53,6 @@ const styles = StyleSheet.create({
     
 })
 
-const container = StyleSheet.compose(styles.container, Theme.bg_egg)
 const title = StyleSheet.compose(styles.title, Theme.text_rich_black)
 const description = StyleSheet.compose(styles.description, Theme.text_rich_black)
 
@@ -83,9 +79,9 @@ export const PopularMovies = function(props){
 
     const state = { movies, loading }
     return <PopularMovieContext.Provider value={state}>
-        <View style={container}>
+        <Container>
             { props.children }
-        </View>
+        </Container>
     </PopularMovieContext.Provider>
 }
 
