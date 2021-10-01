@@ -3,13 +3,11 @@ import {View, Text, StyleSheet } from 'react-native';
 import { Push } from './components/FlatList'
 import { Specifications } from './components/Platform'
 import Todo, { TodoButton, TodoInput } from './components/Todo'
+import Movies, { Items } from './components/Movies'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    paddingTop: 40
+    flex: 1
   }, 
   header: {
     fontSize: 48,
@@ -19,19 +17,11 @@ const styles = StyleSheet.create({
 })
 
 const Home = () => {
-  const [name, setName] = React.useState('????');
-
-  const onChange = text => {
-    setName(text.toUpperCase());
-  };
-
   return (
     <View style={styles.container}>
-      <Todo>
-        <Text style={styles.header}>Add your todos</Text>
-        <TodoInput />
-        <TodoButton />
-      </Todo>
+      <Movies>
+        <Items />
+      </Movies>
     </View>
   );
 };
