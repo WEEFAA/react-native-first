@@ -1,9 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet } from 'react-native';
-import { Push } from './components/FlatList'
-import { Specifications } from './components/Platform'
-import Todo, { TodoButton, TodoInput } from './components/Todo'
-import { PopularMovies, Items } from './components/Movies'
+import { View, StyleSheet } from 'react-native';
+import PopularMovies from './screens/PopularMovies';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,9 +16,7 @@ const styles = StyleSheet.create({
 const Home = () => {
   return (
     <View style={styles.container}>
-      <PopularMovies>
-        <Items />
-      </PopularMovies>
+      <PopularMovies />
     </View>
   );
 };
