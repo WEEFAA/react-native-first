@@ -5,6 +5,7 @@ import { Text, View, StyleSheet, Image, Button, Alert } from 'react-native'
 import Theme, { ShadowBlue } from './../styles'
 import { Loading } from './Loading'
 import { Container } from './Container'
+import NAVS from './../navigations'
 
 const PopularMovieContext = React.createContext({})
 
@@ -95,7 +96,7 @@ export const Items = function(props){
     const onPressLearnMore = function(id){
         // redirect to details page
         return e => {
-            props.navigation.navigate("Details", { id: id })
+            props.navigation.navigate(NAVS.MOVIE_DETAIL, { id: id })
         }
     }
 

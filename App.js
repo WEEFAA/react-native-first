@@ -2,7 +2,9 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import PopularMovies from './screens/PopularMovies';
+import MovieDetails from './screens/MovieDetails';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import NAVS from './navigations'
 const Stack = createNativeStackNavigator();
 
 const styles = StyleSheet.create({
@@ -20,8 +22,9 @@ const Home = () => {
   return (
     <NavigationContainer>
       <View style={styles.container}>
-        <Stack.Navigator>
-          <Stack.Screen name="Popular Movies" component={PopularMovies} />
+        <Stack.Navigator initialRouteName={NAVS.POPULAR_MOVIES}>
+          <Stack.Screen name={NAVS.POPULAR_MOVIES} component={PopularMovies} />
+          <Stack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} />
         </Stack.Navigator>
       </View>
     </NavigationContainer>
