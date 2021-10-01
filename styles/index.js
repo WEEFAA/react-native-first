@@ -8,8 +8,9 @@ export const BlackCoral = "#3E5C76"
 export const ShadowBlue = "#748CAB"
 
 export default StyleSheet.create({
+    // text colors
     text_egg: {
-        color: ShadowBlue
+        color: EggShell
     },
     text_rich_black: {
         color: RichBlack
@@ -22,5 +23,21 @@ export default StyleSheet.create({
     },
     text_shadow_blue: {
         color: ShadowBlue
+    },
+    // background 
+    bg_egg: {
+        backgroundColor: EggShell
+    },
+    bg_rich_black: {
+        backgroundColor: RichBlack
+    },
+    bg_prussian_blue: {
+        backgroundColor: PrussianBlue
+    },
+    bg_black_coral: {
+        backgroundColor: BlackCoral
+    },
+    bg_shadow_blue: {
+        backgroundColor: ShadowBlue
     }
 })
