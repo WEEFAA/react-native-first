@@ -1,8 +1,8 @@
 import React from 'react'
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Push } from './FlatList'
-import { Text, View, StyleSheet, Image } from 'react-native'
-import Theme from './../styles'
+import { Text, View, StyleSheet, Image, Button, Alert } from 'react-native'
+import Theme, { ShadowBlue } from './../styles'
 import { Loading } from './Loading'
 import { Container } from './Container'
 
@@ -49,12 +49,16 @@ const styles = StyleSheet.create({
         minHeight: 30,
         fontSize: 16,
         marginBottom: 5
+    },
+    learnMore: {
+        marginTop: 7
     }
     
 })
 
 const title = StyleSheet.compose(styles.title, Theme.text_rich_black)
 const description = StyleSheet.compose(styles.description, Theme.text_rich_black)
+const button = StyleSheet.compose(styles.learnMore, Theme.bg_prussian_blue)
 
 export const PopularMovies = function(props){
     const [movies, setMovies] = React.useState([])
@@ -87,9 +91,16 @@ export const PopularMovies = function(props){
 
 export const Items = function(props){
     const state = React.useContext(PopularMovieContext)
-    
+
+    const onPressLearnMore = function(id){
+        // redirect to details page
+        return e => {
+            props.navigation.navigate("Details", { id: id })
+        }
+    }
+
     const renderItem = ({ item }) => {
-        return <View style={styles.item}>
+        return <View style={styles.item} key={item.id}>
             <View style={styles.imageWrapper}>
                 <Image source={{uri: `${MOVIE_POSTER_HOST}${item.poster_path}`}} style={styles.itemImage}/>
             </View>
@@ -98,6 +109,12 @@ export const Items = function(props){
                 <Text numberOfLines={2} style={description}>{item.overview || "No Description"}</Text>
                 <Text>Votes: {item.vote_count}</Text>
                 <Text>Popularity: {Math.ceil(item.popularity)}</Text>
+                <Button
+                    onPress={onPressLearnMore(item.id)}
+                    title="Learn More"
+                    style={button}
+                    accessibilityLabel="Learn more about this movie"
+                />
             </View>
         </View>
     }
