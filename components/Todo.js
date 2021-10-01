@@ -33,11 +33,15 @@ export const TodoButton = function(props){
 
 export const TodoInput = function(props){
     const state = React.useContext(TodoContext)
+
+    const keyPress = function(e){
+    }
     
     return <TextInput 
         style={styles.todoInput}
         value={state.input} 
         onChangeText={state.inputChange} 
+        onKeyPress={keyPress}
         placeholder="Todo item..." 
     />
 }
