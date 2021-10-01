@@ -22,5 +22,5 @@ export const Push = function ({data = [], ...props}) {
       <Text style={styles.item}>{item}</Text>
     );
   };
-  return <FlatList style={styles.container} {...props} data={data} renderItem={renderItem} />;
+  return <FlatList style={styles.container} renderItem={renderItem} {...props} data={data}  />;
 };
