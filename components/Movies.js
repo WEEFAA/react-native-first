@@ -2,7 +2,7 @@ import React from 'react'
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Push } from './FlatList'
 import { Text, View, StyleSheet, Image } from 'react-native'
-import { EggShell, RichBlack } from './../styles'
+import Theme, { EggShell } from './../styles'
 
 const MoviesContext = React.createContext({})
 
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontFamily: 'sans-serif',
         fontWeight: 'bold',
-        color: RichBlack
     },
     description: {
         minHeight: 30,
@@ -55,6 +54,10 @@ const styles = StyleSheet.create({
     }
     
 })
+
+const container = StyleSheet.compose(styles.container, Theme.bg_egg)
+const title = StyleSheet.compose(styles.title, Theme.text_rich_black)
+const description = StyleSheet.compose(styles.description, Theme.text_rich_black)
 
 const Movies = function(props){
     const [movies, setMovies] = React.useState([])
@@ -77,7 +80,7 @@ const Movies = function(props){
 
     const state = { movies }
     return <MoviesContext.Provider value={state}>
-        <View style={styles.container}>
+        <View style={container}>
             { props.children }
         </View>
     </MoviesContext.Provider>
@@ -92,8 +95,8 @@ export const Items = function(props){
                 <Image source={{uri: `${MOVIE_POSTER_HOST}${item.poster_path}`}} style={styles.itemImage}/>
             </View>
             <View style={styles.information}>
-                <Text numberOfLines={1} style={styles.title}>{item.title}</Text>
-                <Text numberOfLines={2} style={styles.description}>{item.overview || "No Description"}</Text>
+                <Text numberOfLines={1} style={title}>{item.title}</Text>
+                <Text numberOfLines={2} style={description}>{item.overview || "No Description"}</Text>
                 <Text>Votes: {item.vote_count}</Text>
                 <Text>Popularity: {Math.ceil(item.popularity)}</Text>
             </View>
