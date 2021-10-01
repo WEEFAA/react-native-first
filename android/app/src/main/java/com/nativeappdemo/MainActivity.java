@@ -1,6 +1,7 @@
 package com.nativeappdemo;
 
 import com.facebook.react.ReactActivity;
+import android.os.Bundle;import android.os.Bundle;
 
 public class MainActivity extends ReactActivity {
 
@@ -11,5 +12,10 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "NativeAppDemo";
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
   }
 }
