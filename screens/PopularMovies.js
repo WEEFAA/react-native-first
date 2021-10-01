@@ -4,7 +4,7 @@ import {PopularMovies, Items} from './../components/Movies';
 export default props => {
   return (
     <PopularMovies {...props}>
-      <Items />
+      <Items navigation={props.navigation}/>
     </PopularMovies>
   );
 };
