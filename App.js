@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import { View, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import PopularMovies from './screens/PopularMovies';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+const Stack = createNativeStackNavigator();
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +20,9 @@ const Home = () => {
   return (
     <NavigationContainer>
       <View style={styles.container}>
-        <PopularMovies />
+        <Stack.Navigator>
+          <Stack.Screen name="Popular Movies" component={PopularMovies} />
+        </Stack.Navigator>
       </View>
     </NavigationContainer>
   );
