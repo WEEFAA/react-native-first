@@ -2,7 +2,7 @@ import React from 'react'
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Push } from './FlatList'
 import { Text, View, StyleSheet, Image, Button, Alert } from 'react-native'
-import Theme, { ShadowBlue } from './../styles'
+import Theme, { PrussianBlue } from './../styles'
 import { Loading } from './Loading'
 import { Container } from './Container'
 import NAVS from './../navigations'
@@ -36,6 +36,11 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     // information
+    informationWrapper: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
     information: {
         flex: 1,
         flexDirection: 'column',
@@ -51,15 +56,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5
     },
-    learnMore: {
-        marginTop: 7
+    learnMoreWrapper: {
+        width: '50%'
     }
     
 })
 
 const title = StyleSheet.compose(styles.title, Theme.text_rich_black)
 const description = StyleSheet.compose(styles.description, Theme.text_rich_black)
-const button = StyleSheet.compose(styles.learnMore, Theme.bg_prussian_blue)
 
 export const PopularMovies = function(props){
     const [movies, setMovies] = React.useState([])
@@ -93,10 +97,10 @@ export const PopularMovies = function(props){
 export const Items = function(props){
     const state = React.useContext(PopularMovieContext)
 
-    const onPressLearnMore = function(id){
+    const onPressLearnMore = function(id, title){
         // redirect to details page
         return e => {
-            props.navigation.navigate(NAVS.MOVIE_DETAIL, { id: id })
+            props.navigation.navigate(NAVS.MOVIE_DETAIL, { id, title })
         }
     }
 
@@ -105,17 +109,21 @@ export const Items = function(props){
             <View style={styles.imageWrapper}>
                 <Image source={{uri: `${MOVIE_POSTER_HOST}${item.poster_path}`}} style={styles.itemImage}/>
             </View>
-            <View style={styles.information}>
-                <Text numberOfLines={1} style={title}>{item.title}</Text>
-                <Text numberOfLines={2} style={description}>{item.overview || "No Description"}</Text>
-                <Text>Votes: {item.vote_count}</Text>
-                <Text>Popularity: {Math.ceil(item.popularity)}</Text>
-                <Button
-                    onPress={onPressLearnMore(item.id)}
-                    title="Learn More"
-                    style={button}
-                    accessibilityLabel="Learn more about this movie"
-                />
+            <View style={styles.informationWrapper}>
+                <View style={styles.information}>
+                    <Text numberOfLines={1} style={title}>{item.title}</Text>
+                    <Text numberOfLines={2} style={description}>{item.overview || "No Description"}</Text>
+                    <Text>Votes: {item.vote_count}</Text>
+                    <Text>Popularity: {Math.ceil(item.popularity)}</Text>
+                </View>
+                <View style={styles.learnMoreWrapper}>
+                    <Button
+                        onPress={onPressLearnMore(item.id, item.title)}
+                        title="Learn More"
+                        color={PrussianBlue}
+                        accessibilityLabel="Learn more about this movie"
+                    />
+                </View>
             </View>
         </View>
     }
