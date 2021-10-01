@@ -5,7 +5,7 @@ import { Text, View, StyleSheet, Image } from 'react-native'
 import Theme, { EggShell } from './../styles'
 import { Loading } from './Loading'
 
-const MoviesContext = React.createContext({})
+const PopularMovieContext = React.createContext({})
 
 const styles = StyleSheet.create({
     container: {
@@ -60,7 +60,7 @@ const container = StyleSheet.compose(styles.container, Theme.bg_egg)
 const title = StyleSheet.compose(styles.title, Theme.text_rich_black)
 const description = StyleSheet.compose(styles.description, Theme.text_rich_black)
 
-const Movies = function(props){
+export const PopularMovies = function(props){
     const [movies, setMovies] = React.useState([])
     const [loading, toggleLoading] = React.useState(false)
     const getMovies = async function(){
@@ -72,7 +72,6 @@ const Movies = function(props){
             toggleLoading(false)
         }catch(e){
             toggleLoading(false)
-            console.log(e.message)
         }
     }
     
@@ -83,15 +82,15 @@ const Movies = function(props){
     },[])
 
     const state = { movies, loading }
-    return <MoviesContext.Provider value={state}>
+    return <PopularMovieContext.Provider value={state}>
         <View style={container}>
             { props.children }
         </View>
-    </MoviesContext.Provider>
+    </PopularMovieContext.Provider>
 }
 
 export const Items = function(props){
-    const state = React.useContext(MoviesContext)
+    const state = React.useContext(PopularMovieContext)
     
     const renderItem = ({ item }) => {
         return <View style={styles.item}>
@@ -113,5 +112,3 @@ export const Items = function(props){
         <Push data={state.movies} renderItem={renderItem} style={styles.itemsWrapper}/>
     </View>
 }
-
-export default Movies
