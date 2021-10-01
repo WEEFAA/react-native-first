@@ -3,6 +3,7 @@ import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Push } from './FlatList'
 import { Text, View, StyleSheet, Image } from 'react-native'
 import Theme, { EggShell } from './../styles'
+import { Loading } from './Loading'
 
 const MoviesContext = React.createContext({})
 
@@ -61,13 +62,16 @@ const description = StyleSheet.compose(styles.description, Theme.text_rich_black
 
 const Movies = function(props){
     const [movies, setMovies] = React.useState([])
-    
+    const [loading, toggleLoading] = React.useState(false)
     const getMovies = async function(){
         try{
+            toggleLoading(true)
             const resp = await MoviesApi.get('/movie/popular')
             const { results } = resp.data 
             setMovies(results)
+            toggleLoading(false)
         }catch(e){
+            toggleLoading(false)
             console.log(e.message)
         }
     }
@@ -78,7 +82,7 @@ const Movies = function(props){
         getMovies()
     },[])
 
-    const state = { movies }
+    const state = { movies, loading }
     return <MoviesContext.Provider value={state}>
         <View style={container}>
             { props.children }
@@ -102,7 +106,9 @@ export const Items = function(props){
             </View>
         </View>
     }
-
+    
+    if(state.loading) return <Loading />
+    
     return <View style={styles.itemsContainer}>
         <Push data={state.movies} renderItem={renderItem} style={styles.itemsWrapper}/>
     </View>
