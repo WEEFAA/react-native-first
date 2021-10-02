@@ -41,9 +41,14 @@ const PopularMoviesStack = () => {
 }
 
 const App = () => {        
+  const options = {
+    headerShown: false, 
+    tabBarStyle: Theme.bg_rich_black, 
+    tabBarLabelStyle: Theme.text_egg 
+  }
   return (
     <NavigationContainer>
-      <Tabs.Navigator screenOptions={{headerShown: false}}>
+      <Tabs.Navigator screenOptions={options}>
         <Tabs.Screen name="Popular" component={PopularMoviesStack}/>
       </Tabs.Navigator>
     </NavigationContainer>
