@@ -4,8 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import PopularMovies from './screens/PopularMovies';
 import MovieDetails from './screens/MovieDetails';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import NAVS from './navigations'
-const Stack = createNativeStackNavigator();
+
+const Stack = createNativeStackNavigator()
+const Tabs = createBottomTabNavigator()
 
 const styles = StyleSheet.create({
   container: {
@@ -18,21 +21,27 @@ const styles = StyleSheet.create({
   },
 });
 
-const Home = () => {
+const PopularMoviesStack = () => {
   const detailOptions =  props => ({ 
     title: props.route.params.title
   })
-          
+
+  return <View style={styles.container}>
+    <Stack.Navigator initialRouteName={NAVS.POPULAR_MOVIES}>
+      <Stack.Screen name={NAVS.POPULAR_MOVIES} component={PopularMovies} />
+      <Stack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} options={detailOptions} />
+    </Stack.Navigator>
+  </View>
+}
+
+const App = () => {        
   return (
     <NavigationContainer>
-      <View style={styles.container}>
-        <Stack.Navigator initialRouteName={NAVS.POPULAR_MOVIES}>
-          <Stack.Screen name={NAVS.POPULAR_MOVIES} component={PopularMovies} />
-          <Stack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} options={detailOptions} />
-        </Stack.Navigator>
-      </View>
+      <Tabs.Navigator screenOptions={{headerShown: false}}>
+        <Tabs.Screen name="Popular" component={PopularMoviesStack}/>
+      </Tabs.Navigator>
     </NavigationContainer>
   );
 };
 
-export default Home;
+export default App;
