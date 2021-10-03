@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import PopularMovies from './screens/PopularMovies';
 import MovieDetails from './screens/MovieDetails';
+import Home from './screens/Home'
 import NAVS from './navigations'
 import Theme, { EggShell } from './styles'
 // Navigation
@@ -10,8 +11,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-const Stack = createNativeStackNavigator()
-const Tabs = createBottomTabNavigator()
+const HomeStack = createNativeStackNavigator()
+const PopularStack = createNativeStackNavigator()
+const TabsStack = createBottomTabNavigator()
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +26,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const HomeScreenStack = () => {
+  const options = {headerShown: false}
+
+  return <HomeStack.Navigator screenOptions={options}>
+    <HomeStack.Screen name={NAVS.HOME} component={Home}/>
+  </HomeStack.Navigator>  
+}
+
 const PopularMoviesStack = () => {
   const detailOptions =  props => ({ 
     title: props.route.params.title
@@ -35,10 +45,10 @@ const PopularMoviesStack = () => {
   }
 
   return <View style={styles.container}>
-    <Stack.Navigator initialRouteName={NAVS.POPULAR_MOVIES} screenOptions={options}>
-      <Stack.Screen name={NAVS.POPULAR_MOVIES} component={PopularMovies} />
-      <Stack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} options={detailOptions} />
-    </Stack.Navigator>
+    <PopularStack.Navigator initialRouteName={NAVS.POPULAR_MOVIES} screenOptions={options}>
+      <PopularStack.Screen name={NAVS.POPULAR_MOVIES} component={PopularMovies} />
+      <PopularStack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails} options={detailOptions} />
+    </PopularStack.Navigator>
   </View>
 }
 
@@ -48,16 +58,24 @@ const App = () => {
     tabBarStyle: Theme.bg_rich_black, 
     tabBarLabelStyle: Theme.text_egg 
   }
-  const tabBarIcon = () => <Ionicons name="star" size={30} color={EggShell} />
+  
+  const tabBarIcon = () => <MaterialIcons name="star" size={30} color={EggShell} />
+  const homeBarIcon = () => <MaterialIcons name="home" size={30} color={EggShell} />
+  
   return (
     <NavigationContainer>
-      <Tabs.Navigator screenOptions={options}>
-        <Tabs.Screen 
-          name="Popular" 
-          component={PopularMoviesStack} 
-          options={{tabBarIcon}}
+      <TabsStack.Navigator screenOptions={options}>
+        <TabsStack.Screen 
+          name={NAVS.TAB_HOME} 
+          component={HomeScreenStack} 
+          options={{tabBarIcon: homeBarIcon, title: "Home" }}
         />
-      </Tabs.Navigator>
+        <TabsStack.Screen 
+          name={NAVS.TAB_POPULAR} 
+          component={PopularMoviesStack} 
+          options={{tabBarIcon, title: "Popular" }}
+        />
+      </TabsStack.Navigator>
     </NavigationContainer>
   );
 };
