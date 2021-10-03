@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { FlatList, Text, View, StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
@@ -17,10 +17,14 @@ const styles = StyleSheet.create({
     }
 })
 export const Push = function ({data = [], ...props}) {
-  const renderItem = ({item}) => {
-    return (
-      <Text style={styles.item}>{item}</Text>
-    );
-  };
+
+  const renderItem = useMemo(() => {
+    return ({item}) => {
+      return (
+        <Text style={styles.item}>{item}</Text>
+      );
+    }
+  },[data])
+  
   return <FlatList style={styles.container} renderItem={renderItem} {...props} data={data}  />;
 };

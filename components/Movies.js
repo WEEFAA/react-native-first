@@ -109,40 +109,44 @@ export const Items = function (props) {
         };
     };
 
-    const renderItem = ({ item }) => {
-        return (
-            <View style={styles.item} key={item.id}>
-                <View style={styles.imageWrapper}>
-                    <Image
-                        source={{
-                            uri: `${MOVIE_POSTER_HOST}${item.poster_path}`,
-                        }}
-                        style={styles.itemImage}
-                    />
-                </View>
-                <View style={styles.informationWrapper}>
-                    <View style={styles.information}>
-                        <Text numberOfLines={1} style={title}>
-                            {item.title}
-                        </Text>
-                        <Text numberOfLines={2} style={description}>
-                            {item.overview || 'No Description'}
-                        </Text>
-                        <Text>Votes: {item.vote_count}</Text>
-                        <Text>Popularity: {Math.ceil(item.popularity)}</Text>
-                    </View>
-                    <View style={styles.learnMoreWrapper}>
-                        <Button
-                            onPress={onPressLearnMore(item.id, item.title)}
-                            title="Learn More"
-                            color={PrussianBlue}
-                            accessibilityLabel="Learn more about this movie"
+    const renderItem = React.useMemo(() => {
+        return ({ item }) => {
+            return (
+                <View style={styles.item} key={item.id}>
+                    <View style={styles.imageWrapper}>
+                        <Image
+                            source={{
+                                uri: `${MOVIE_POSTER_HOST}${item.poster_path}`,
+                            }}
+                            style={styles.itemImage}
                         />
                     </View>
+                    <View style={styles.informationWrapper}>
+                        <View style={styles.information}>
+                            <Text numberOfLines={1} style={title}>
+                                {item.title}
+                            </Text>
+                            <Text numberOfLines={2} style={description}>
+                                {item.overview || 'No Description'}
+                            </Text>
+                            <Text>Votes: {item.vote_count}</Text>
+                            <Text>
+                                Popularity: {Math.ceil(item.popularity)}
+                            </Text>
+                        </View>
+                        <View style={styles.learnMoreWrapper}>
+                            <Button
+                                onPress={onPressLearnMore(item.id, item.title)}
+                                title="Learn More"
+                                color={PrussianBlue}
+                                accessibilityLabel="Learn more about this movie"
+                            />
+                        </View>
+                    </View>
                 </View>
-            </View>
-        );
-    };
+            );
+        };
+    }, []);
 
     if (state.loading) return <Loading />;
 
