@@ -6,8 +6,9 @@ const styles = StyleSheet.create({
     container: { flex: 1, }
 })
 
-const container = StyleSheet.compose(styles.container, Theme.bg_egg)
-
-export const Container = props => <View style={container}>
-    { props.children }
-</View>
+export const Container = props => { 
+    const customColor = props.bgColor || Theme.bg_egg
+    return <View style={StyleSheet.compose(styles.container, customColor)}>
+        { props.children }
+    </View>
+}
