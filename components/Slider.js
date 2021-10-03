@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import { SliderBox } from 'react-native-image-slider-box';
+import { iOSColors } from 'react-native-typography'
 const dimension = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
     container: {
         minHeight: dimension.height / 2.2,
+        backgroundColor: iOSColors.black
     },
     dotStyle: {
         display: 'none',
@@ -18,7 +20,7 @@ export const Slider = function (props) {
     }, [dimension]);
 
     return (
-        <View>
+        <View style={styles.container}>
             <SliderBox
                 autoplay
                 circleLoop
