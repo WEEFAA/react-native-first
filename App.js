@@ -66,7 +66,7 @@ const App = () => {
   
   return (
     <NavigationContainer>
-      <TabsStack.Navigator screenOptions={options}>
+      <TabsStack.Navigator screenOptions={options} initialRouteName={NAVS.TAB_POPULAR}>
         <TabsStack.Screen 
           name={NAVS.TAB_HOME} 
           component={HomeScreenStack} 
