@@ -7,6 +7,7 @@ import { Loading } from './Loading';
 import { Container } from './Container';
 import NAVS from './../navigations';
 import { useNavigation } from '@react-navigation/native'
+import PropTypes from 'prop-types'
 
 const PopularMovieContext = React.createContext({});
 
@@ -68,6 +69,10 @@ const description = StyleSheet.compose(
     Theme.text_rich_black,
 );
 
+const popularMoviesPropTypes = {
+
+}
+
 export const PopularMovies = function (props) {
     const [movies, setMovies] = React.useState([]);
     const [loading, toggleLoading] = React.useState(false);
@@ -99,6 +104,10 @@ export const PopularMovies = function (props) {
         </PopularMovieContext.Provider>
     );
 };
+
+const itemPropTypes = {
+
+}
 
 export const Items = function (props) {
     const navigation = useNavigation()
@@ -162,3 +171,6 @@ export const Items = function (props) {
         </View>
     );
 };
+
+PopularMovies.propTypes = popularMoviesPropTypes
+Items.propTypes = itemPropTypes

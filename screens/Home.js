@@ -102,6 +102,7 @@ const Home = function (props) {
     const loadingComponentHeight = { height: dimensions.height / 2 };
     return (
         <Container bgColor={Theme.bg_rich_black}>
+            <Text>HELLLLO</Text>
             <ScrollView>
                 {sliderLoading ? (
                     <Loading wrapperStyle={loadingComponentHeight} />

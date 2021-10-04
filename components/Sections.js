@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import Theme, { BlackCoral } from './../styles'
 import { material, iOSColors } from 'react-native-typography'
-
+import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
     container: {
@@ -29,6 +29,12 @@ const styles = StyleSheet.create({
 const header = StyleSheet.flatten([material.titleWhite])
 const container = StyleSheet.compose(styles.container,Theme.shadow1(BlackCoral))
 
+const listSectionTypes = {
+    wrapperStyle: PropTypes.object,
+    title: PropTypes.string,
+    renderItem: PropTypes.func.isRequired
+}
+
 export const ListSection = function(props){
 
     const renderItem = useMemo(() => {
@@ -48,3 +54,5 @@ export const ListSection = function(props){
         />
     </View>
 }
+
+ListSection.propTypes = listSectionTypes

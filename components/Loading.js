@@ -1,6 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, StyleSheet, View, ImageBackground } from 'react-native'
 import Theme, { BlackCoral } from './../styles'
+import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
     container: {
@@ -12,6 +13,12 @@ const styles = StyleSheet.create({
 })
 
 const container = StyleSheet.compose(styles.container)
+
+const loadingPropTypes = {
+    noImage: PropTypes.bool,
+    wrapperStyle: PropTypes.object,
+}
+
 export const Loading = function({noImage, ...props}){
     const containerStyle = StyleSheet.flatten([container, props.wrapperStyle])
     if(noImage){
@@ -26,3 +33,5 @@ export const Loading = function({noImage, ...props}){
         <ActivityIndicator size="large" color={BlackCoral} {...props}/>
     </ImageBackground>
 }
+
+Loading.propTypes = loadingPropTypes

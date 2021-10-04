@@ -2,6 +2,8 @@ import React, { useCallback } from 'react';
 import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import NAVS from './../navigations'
+import PropTypes from 'prop-types'
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -11,6 +13,12 @@ const styles = StyleSheet.create({
         height: 100,
     }
 });
+
+const cardTypes = {
+    item: PropTypes.object.isRequired,
+    wrapperStyle: PropTypes.object,
+    children: PropTypes.element
+}
 
 export const Card = function ({ children, item, wrapperStyle, ...props }) {
     const navigation = useNavigation()
@@ -26,3 +34,5 @@ export const Card = function ({ children, item, wrapperStyle, ...props }) {
         </TouchableOpacity>
     );
 };
+
+Card.propTypes = cardTypes
