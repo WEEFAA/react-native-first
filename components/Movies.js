@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios';
 import { Push } from './FlatList';
-import { Text, View, StyleSheet, Image, Button, Alert } from 'react-native';
+import { Text, View, StyleSheet, Image, Button, useWindowDimensions } from 'react-native';
 import Theme, { PrussianBlue } from './../styles';
 import { Loading } from './Loading';
 import { Container } from './Container';
@@ -76,17 +76,21 @@ const popularMoviesPropTypes = {
 export const PopularMovies = function (props) {
     const [movies, setMovies] = React.useState([]);
     const [loading, toggleLoading] = React.useState(false);
-    const getMovies = async function () {
+    const [page, setPage] = React.useState(1)
+
+    const getMovies = useCallback(async function (currentPage = 1) {
         try {
             toggleLoading(true);
-            const resp = await MoviesApi.get('/movie/popular');
+            const params = { page: currentPage }
+            const resp = await MoviesApi.get('/movie/popular', { params });
             const { results } = resp.data;
-            setMovies(results);
+            setMovies([...movies, ...results]);
+            setPage(currentPage)
             toggleLoading(false);
         } catch (e) {
             toggleLoading(false);
         }
-    };
+    },[movies])
 
     React.useEffect(() => {
         getMovies();
@@ -96,8 +100,10 @@ export const PopularMovies = function (props) {
         return {
             movies,
             loading,
+            getMovies,
+            page
         };
-    }, [loading, movies]);
+    }, [loading, movies, getMovies, page]);
     return (
         <PopularMovieContext.Provider value={state}>
             <Container>{props.children}</Container>
@@ -110,6 +116,7 @@ const itemPropTypes = {
 }
 
 export const Items = function (props) {
+    const dimensions = useWindowDimensions()
     const navigation = useNavigation()
     const state = React.useContext(PopularMovieContext);
 
@@ -159,15 +166,32 @@ export const Items = function (props) {
         };
     }, []);
 
-    if (state.loading) return <Loading />;
+    const getMoreData = useCallback(() => {
+        // get more data if user is at the bottom
+        // and not currently fetching any data
+        if(!state.loading){
+            const currentPage = state.page
+            const nextPage = currentPage + 1 
+            state.getMovies(nextPage)
+        }
+    },[state.loading, state.getMovies, state.page])
 
+    const keyExtractor = useCallback((item, index) => `${item.id}-${index}`, [])
+
+    const loadingWrapperStyle = { minHeight: dimensions.height / 2.2 }
+    const loading = state.loading && <Loading noImage wrapperStyle={loadingWrapperStyle} />
     return (
         <View style={styles.itemsContainer}>
             <Push
                 data={state.movies}
                 renderItem={renderItem}
                 style={styles.itemsWrapper}
+                onEndReached={getMoreData}
+                onEndReachedThreshold={1}
+                keyExtractor={keyExtractor}
+                ListFooterComponent={loading}
             />
+
         </View>
     );
 };
