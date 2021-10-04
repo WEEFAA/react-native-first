@@ -6,6 +6,7 @@ import Theme, { PrussianBlue } from './../styles';
 import { Loading } from './Loading';
 import { Container } from './Container';
 import NAVS from './../navigations';
+import { useNavigation } from '@react-navigation/native'
 
 const PopularMovieContext = React.createContext({});
 
@@ -100,12 +101,13 @@ export const PopularMovies = function (props) {
 };
 
 export const Items = function (props) {
+    const navigation = useNavigation()
     const state = React.useContext(PopularMovieContext);
 
     const onPressLearnMore = function (id, title) {
         // redirect to details page
         return e => {
-            props.navigation.navigate(NAVS.MOVIE_DETAIL, { id, title });
+            navigation.navigate(NAVS.MOVIE_DETAIL, { id, title });
         };
     };
 
