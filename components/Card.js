@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-
+import React, { useCallback } from 'react';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
+import NAVS from './../navigations'
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -11,11 +12,17 @@ const styles = StyleSheet.create({
     }
 });
 
-export const Card = function ({ children, wrapperStyle, ...props }) {
+export const Card = function ({ children, item, wrapperStyle, ...props }) {
+    const navigation = useNavigation()
+
+    const onPress = useCallback(function(){
+        navigation.navigate(NAVS.MOVIE_DETAIL, { title: item.title, id: item.id })
+    },[item])
+    
     return (
-        <View style={StyleSheet.compose(styles.container, wrapperStyle)}>
+        <TouchableOpacity onPress={onPress} style={StyleSheet.compose(styles.container, wrapperStyle)}>
             <Image style={styles.image} {...props} />
             {children}
-        </View>
+        </TouchableOpacity>
     );
 };

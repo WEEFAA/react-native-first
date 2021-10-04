@@ -91,7 +91,7 @@ const Home = function (props) {
             const uri = `${MOVIE_POSTER_HOST}${item.poster_path}`;
             const style = { marginRight: 10 };
             return (
-                <Card source={{ uri }} wrapperStyle={style}>
+                <Card item={item} source={{ uri }} wrapperStyle={style}>
                     <Text>Hello</Text>
                 </Card>
             );

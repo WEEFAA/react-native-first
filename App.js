@@ -31,6 +31,7 @@ const HomeScreenStack = () => {
 
   return <HomeStack.Navigator screenOptions={options}>
     <HomeStack.Screen name={NAVS.HOME} component={Home}/>
+    <HomeStack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails}/>
   </HomeStack.Navigator>  
 }
 
