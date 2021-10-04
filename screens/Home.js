@@ -7,7 +7,7 @@ import { ListSection } from './../components/Sections';
 import { Text, ScrollView, StyleSheet, View, Dimensions } from 'react-native';
 import { Card } from './../components/Card';
 import { Loading } from './../components/Loading';
-import Theme from './../styles';
+import { RichBlack } from './../styles';
 const dimensions = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
 
 const Home = function (props) {
     // loading
-    const [sliderLoading, toggleSliderLoading] = useState(false);
-    const [othersLoading, toggleOthersLoading] = useState(false);
+    const [sliderLoading, toggleSliderLoading] = useState(true);
+    const [othersLoading, toggleOthersLoading] = useState(true);
     // data
     const [topRated, setTopRated] = useState([]);
     const [popular, setPopular] = useState([]);
@@ -101,8 +101,7 @@ const Home = function (props) {
     const wrapperStyle = { marginBottom: 20 };
     const loadingComponentHeight = { height: dimensions.height / 2 };
     return (
-        <Container bgColor={Theme.bg_rich_black}>
-            <Text>HELLLLO</Text>
+        <Container bgColor={RichBlack}>
             <ScrollView>
                 {sliderLoading ? (
                     <Loading wrapperStyle={loadingComponentHeight} />
