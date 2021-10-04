@@ -17,9 +17,9 @@ const containerPropTypes = {
     children: PropTypes.oneOfType(elements)
 }
 
-export const Container = props => { 
-    const customColor = props.bgColor || Theme.bg_egg
-    return <View style={StyleSheet.compose(styles.container, customColor)}>
+export const Container = ({ bgColor, wrapperStyle, noDefaultColor, ...props}) => { 
+    const customColor = bgColor ? { backgroundColor: bgColor } : noDefaultColor ? {} : Theme.bg_egg
+    return <View style={StyleSheet.flatten([styles.container, wrapperStyle, customColor ])}>
         { props.children }
     </View>
 }
