@@ -7,14 +7,15 @@ import { iOSColors } from 'react-native-typography'
 const sliderPropTypes = {
     onCurrentImagePressed: PropTypes.func,
     children: PropTypes.func,
+    minHeight: PropTypes.number
 }
 
-export const Slider = function ({onCurrentImagePressed, children, ...props}) {
+export const Slider = function ({ minHeight, onCurrentImagePressed, children, ...props}) {
     const [index, setIndex] = useState(0)
     const dimension = useWindowDimensions()
 
     const height = useMemo(() => {
-        return dimension.height / 2 ;
+        return minHeight || dimension.height / 2 ;
     }, [dimension]);
 
     const currentImageEmitter = useCallback(i => {
