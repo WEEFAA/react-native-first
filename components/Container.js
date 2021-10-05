@@ -13,6 +13,7 @@ export const Container = ({
     bgColor,
     wrapperStyle,
     noDefaultColor,
+    style,
     ...props
 }) => {
     const customColor = bgColor
@@ -26,6 +27,7 @@ export const Container = ({
                 styles.container,
                 wrapperStyle,
                 customColor,
+                style
             ])}>
             {props.children}
         </View>
