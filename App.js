@@ -12,6 +12,7 @@ import Navigation from './components/Navigation'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { displayName } from './app.json'
 
 const HomeStack = createNativeStackNavigator()
 const PopularStack = createNativeStackNavigator()
@@ -33,8 +34,9 @@ const HomeScreenStack = () => {
     header: Navigation,
   }), [])
 
+  const homeOptions = React.useMemo(() => ({title: displayName }), [])
   return <HomeStack.Navigator screenOptions={options}>
-    <HomeStack.Screen name={NAVS.HOME} component={Home}/>
+    <HomeStack.Screen name={NAVS.HOME} component={Home} options={homeOptions}/>
     <HomeStack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails}/>
   </HomeStack.Navigator>  
 }
