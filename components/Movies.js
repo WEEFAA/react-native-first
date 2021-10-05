@@ -1,13 +1,16 @@
 import React, { useCallback } from 'react';
-import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios';
+import PropTypes from 'prop-types'
+import Theme from './../styles';
+import { useNavigation } from '@react-navigation/native'
 import { Push } from './FlatList';
-import { Text, View, StyleSheet, Image, Button, useWindowDimensions } from 'react-native';
-import Theme, { PrussianBlue } from './../styles';
+import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios';
+import { Text, View, StyleSheet, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { Loading } from './Loading';
 import { Container } from './Container';
+import { Title, HumanBody } from './Typography'
+import { Details, Key, Value } from './Detail'
 import NAVS from './../navigations';
-import { useNavigation } from '@react-navigation/native'
-import PropTypes from 'prop-types'
+import { systemWeights } from 'react-native-typography';
 
 const PopularMovieContext = React.createContext({});
 
@@ -120,45 +123,45 @@ export const Items = function (props) {
     const navigation = useNavigation()
     const state = React.useContext(PopularMovieContext);
 
-    const onPressLearnMore = function (id, title) {
+    const onPressLearnMore = useCallback(function (id, title) {
         // redirect to details page
         return e => {
             navigation.navigate(NAVS.MOVIE_DETAIL, { id, title });
         };
-    };
+    },[navigation])
 
     const renderItem = React.useMemo(() => {
         return ({ item }) => {
             return (
                 <View style={styles.item} key={item.id}>
                     <View style={styles.imageWrapper}>
-                        <Image
-                            source={{
-                                uri: `${MOVIE_POSTER_HOST}${item.poster_path}`,
-                            }}
-                            style={styles.itemImage}
-                        />
+                        <TouchableOpacity onPress={onPressLearnMore(item.id, item.title)}>
+                            <Image
+                                source={{
+                                    uri: `${MOVIE_POSTER_HOST}${item.poster_path}`,
+                                }}
+                                style={styles.itemImage}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.informationWrapper}>
                         <View style={styles.information}>
-                            <Text numberOfLines={1} style={title}>
+                            <Title  numberOfLines={1}>
                                 {item.title}
-                            </Text>
-                            <Text numberOfLines={2} style={description}>
+                            </Title>
+                            <HumanBody weight={systemWeights.regular} numberOfLines={2}>
                                 {item.overview || 'No Description'}
-                            </Text>
-                            <Text>Votes: {item.vote_count}</Text>
-                            <Text>
-                                Popularity: {Math.ceil(item.popularity)}
-                            </Text>
-                        </View>
-                        <View style={styles.learnMoreWrapper}>
-                            <Button
-                                onPress={onPressLearnMore(item.id, item.title)}
-                                title="Learn More"
-                                color={PrussianBlue}
-                                accessibilityLabel="Learn more about this movie"
-                            />
+                            </HumanBody>
+                            <Details style={{borderWidth: 0, width: '80%'}}>
+                                <Key>
+                                    <Title font="headline">Votes: </Title>
+                                </Key>
+                                <Value><HumanBody>{item.vote_count}</HumanBody></Value>
+                                <Key>
+                                    <Title font="headline">Popularity:</Title>
+                                </Key>
+                                <Value><HumanBody>{Math.ceil(item.popularity)}</HumanBody></Value>
+                            </Details>
                         </View>
                     </View>
                 </View>
