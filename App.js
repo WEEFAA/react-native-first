@@ -7,6 +7,7 @@ import MovieDetails from './screens/MovieDetails';
 import Home from './screens/Home'
 import NAVS from './navigations'
 import Theme, { EggShell } from './styles'
+import Navigation from './components/Navigation'
 // Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -28,7 +29,9 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreenStack = () => {
-  const options = {headerShown: false}
+  const options = React.useMemo(() => ({
+    header: Navigation,
+  }), [])
 
   return <HomeStack.Navigator screenOptions={options}>
     <HomeStack.Screen name={NAVS.HOME} component={Home}/>
@@ -41,10 +44,11 @@ const PopularMoviesStack = () => {
     title: props.route.params.title
   })
 
-  const options = { 
+  const options = React.useMemo(() => ({ 
     headerStyle: Theme.bg_rich_black, 
-    headerTitleStyle: Theme.text_egg
-  }
+    headerTitleStyle: Theme.text_egg,
+    header: Navigation
+  }), [])
 
   return <View style={styles.container}>
     <PopularStack.Navigator initialRouteName={NAVS.POPULAR_MOVIES} screenOptions={options}>
@@ -55,12 +59,12 @@ const PopularMoviesStack = () => {
 }
 
 const App = () => {        
-  const options = {
+  const options = React.useMemo(() => ({
     headerShown: false, 
     tabBarStyle: Theme.bg_rich_black, 
     tabBarLabelStyle: Theme.text_egg,
     tabBarShowLabel: false,
-  }
+  }),[])
   
   const tabBarIcon = () => <MaterialIcons name="star" size={30} color={EggShell} />
   const homeBarIcon = () => <MaterialIcons name="home" size={30} color={EggShell} />
