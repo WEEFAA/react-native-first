@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
 const tableStyles = StyleSheet.create({
     row: (justifyContent, textStyle) => ({
         flexDirection: 'row',
-        backgroundColor: 'red',
         justifyContent: justifyContent,
         ...textStyle
     }),
