@@ -58,7 +58,8 @@ const App = () => {
   const options = {
     headerShown: false, 
     tabBarStyle: Theme.bg_rich_black, 
-    tabBarLabelStyle: Theme.text_egg 
+    tabBarLabelStyle: Theme.text_egg,
+    tabBarShowLabel: false,
   }
   
   const tabBarIcon = () => <MaterialIcons name="star" size={30} color={EggShell} />
