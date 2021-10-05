@@ -86,7 +86,7 @@ const MovieDetails = props => {
             const response = await movies.get(url);
             toggleLoading(false);
 			const data = response.data
-			const rating = constrain(data.vote_count, RATING.MIN_ENTRY, RATING.MAX_ENTRY)
+			const rating = constrain(data.vote_average, RATING.MIN_ENTRY, RATING.MAX_ENTRY)
 			setRating(rating)
             setData(data);
         } catch (e) {
