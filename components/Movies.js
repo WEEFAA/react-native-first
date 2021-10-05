@@ -4,7 +4,7 @@ import Theme from './../styles';
 import { useNavigation } from '@react-navigation/native'
 import { Push } from './FlatList';
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios';
-import { Text, View, StyleSheet, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { Loading } from './Loading';
 import { Container } from './Container';
 import { Title, HumanBody } from './Typography'
@@ -64,6 +64,11 @@ const styles = StyleSheet.create({
     learnMoreWrapper: {
         width: '50%',
     },
+    detailStyle: {
+        borderWidth: 0, 
+        width: '80%', 
+        paddingLeft: 0
+    }
 });
 
 const title = StyleSheet.compose(styles.title, Theme.text_rich_black);
@@ -129,7 +134,7 @@ export const Items = function (props) {
             navigation.navigate(NAVS.MOVIE_DETAIL, { id, title });
         };
     },[navigation])
-
+    
     const renderItem = React.useMemo(() => {
         return ({ item }) => {
             return (
@@ -146,13 +151,13 @@ export const Items = function (props) {
                     </View>
                     <View style={styles.informationWrapper}>
                         <View style={styles.information}>
-                            <Title  numberOfLines={1}>
+                            <Title numberOfLines={1}>
                                 {item.title}
                             </Title>
                             <HumanBody weight={systemWeights.regular} numberOfLines={2}>
                                 {item.overview || 'No Description'}
                             </HumanBody>
-                            <Details style={{borderWidth: 0, width: '80%'}}>
+                            <Details style={styles.detailStyle}>
                                 <Key>
                                     <Title font="headline">Votes: </Title>
                                 </Key>
