@@ -5,6 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import PopularMovies from './screens/PopularMovies';
 import MovieDetails from './screens/MovieDetails';
 import Home from './screens/Home'
+import Search from './screens/Search'
 import NAVS from './navigations'
 import Theme, { EggShell } from './styles'
 import Navigation from './components/Navigation'
@@ -16,6 +17,7 @@ import { displayName } from './app.json'
 
 const HomeStack = createNativeStackNavigator()
 const PopularStack = createNativeStackNavigator()
+const DiscoverStack = createNativeStackNavigator()
 const TabsStack = createBottomTabNavigator()
 
 const styles = StyleSheet.create({
@@ -39,6 +41,17 @@ const HomeScreenStack = () => {
     <HomeStack.Screen name={NAVS.HOME} component={Home} options={homeOptions}/>
     <HomeStack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails}/>
   </HomeStack.Navigator>  
+}
+
+const DiscoverScreenStack = () => {
+  const options = React.useMemo(() => ({
+    header: Navigation,
+  }), [])
+
+  return <DiscoverStack.Navigator screenOptions={options}>
+    <DiscoverStack.Screen name={NAVS.DISCOVER} component={Search}/>
+    <DiscoverStack.Screen name={NAVS.MOVIE_DETAIL} component={MovieDetails}/>
+  </DiscoverStack.Navigator>  
 }
 
 const PopularMoviesStack = () => {
@@ -70,6 +83,7 @@ const App = () => {
   
   const tabBarIcon = () => <MaterialIcons name="star" size={30} color={EggShell} />
   const homeBarIcon = () => <MaterialIcons name="home" size={30} color={EggShell} />
+  const searchBarIcon = () => <MaterialIcons name="search" size={30} color={EggShell} />
   
   return (
     <NavigationContainer>
@@ -78,6 +92,11 @@ const App = () => {
           name={NAVS.TAB_HOME} 
           component={HomeScreenStack} 
           options={{tabBarIcon: homeBarIcon, title: "Home" }}
+        />
+        <TabsStack.Screen 
+          name={NAVS.TAB_DISCOVER}
+          component={DiscoverScreenStack} 
+          options={{tabBarIcon: searchBarIcon, title: "Discover" }}
         />
         <TabsStack.Screen 
           name={NAVS.TAB_POPULAR} 
