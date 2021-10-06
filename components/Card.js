@@ -22,7 +22,7 @@ const cardTypes = {
     children: PropTypes.element
 }
 
-export const Card = function ({ children, item, wrapperStyle, ...props }) {
+export const Card = function ({ style, children, item, wrapperStyle, ...props }) {
     const navigation = useNavigation()
 
     const onPress = useCallback(function(){
@@ -31,7 +31,7 @@ export const Card = function ({ children, item, wrapperStyle, ...props }) {
     
     return (
         <TouchableOpacity onPress={onPress} style={StyleSheet.compose(styles.container, wrapperStyle)}>
-            <Image style={styles.image} {...props} />
+            <Image style={StyleSheet.flatten([styles.image, style])} {...props} />
             {children}
         </TouchableOpacity>
     );
