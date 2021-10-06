@@ -33,6 +33,7 @@ allprojects {
         }
 
         google()
+        jcenter() // adding it here for react-native-video
         maven { url 'https://www.jitpack.io' }
     }
 }
