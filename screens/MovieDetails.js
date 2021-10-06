@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { Container, Row, Col } from './../components/Container';
+import { View, ScrollView, StyleSheet, Modal } from 'react-native';
+import { Container } from './../components/Container';
 import { Details, Key, Value } from './../components/Detail';
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios';
 import { Loading } from './../components/Loading';
@@ -11,12 +11,14 @@ import RATING from './../utils/rating';
 import { constrain } from './../utils';
 import dateformat from 'dateformat'
 import { Title, HumanBody } from './../components/Typography'
+import { Video } from './../components/Video'
 import {
     iOSColors,
     materialColors,
 } from 'react-native-typography';
 
 const MovieDetails = props => {
+    const [showModal, setShowModal] = useState(false)
     const [data, setData] = useState({});
     const [loading, toggleLoading] = useState(true);
     const [rating, setRating] = useState(0);
@@ -50,8 +52,9 @@ const MovieDetails = props => {
         }
     }, [information]);
 
-	const onPlay = index => {
-	}
+	const onPlay = useCallback(index => {
+        setShowModal(current => !current)
+	},[])
 
     useEffect(() => {
         getInformation();
@@ -126,9 +129,16 @@ const MovieDetails = props => {
                     </View>
                 </Container>
             </ScrollView>
+            <VideoModal visible={showModal} close={onPlay} onRequestClose={onPlay} />
         </Container>
     );
 };
+
+function VideoModal({ close, ...props}){
+    return <Modal transparent animationType="fade" {...props}>
+        <Video source={{uri: 'https://player.vimeo.com/external/434945712.sd.mp4?s=433fbe2cba95823e978d76d17ad03ec4f001bd55&profile_id=165&oauth2_token_id=57447761'}}/>
+    </Modal>
+}
 
 const styles = StyleSheet.create({
     center: {
