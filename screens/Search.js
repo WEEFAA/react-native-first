@@ -1,10 +1,9 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { StyleSheet, useWindowDimensions } from 'react-native'
+import { StyleSheet, useWindowDimensions, FlatList, Animated } from 'react-native'
 import { Container } from '../components/Container'
 import { Button } from './../components/Button'
 import { Input } from '../components/Form'
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
-import { ListSection } from './../components/Sections'
 import { Card } from '../components/Card'
 import { Loading } from './../components/Loading'
 
@@ -30,7 +29,7 @@ const Search = function (props) {
             const data = response.data
             const { results, total_results } = data
             setTotal(total_results)
-            setItems([...items, ...results])
+            setItems(currentItems => ([...currentItems, ...results]))
             setPage(currentPage)
             setLastQuery(query)
             toggleLoading(false)
@@ -40,11 +39,7 @@ const Search = function (props) {
     },[setTotal, setItems, setPage, setLastQuery, toggleLoading, items])
     
     const onSubmit = useCallback(async () => {
-        getData(text)
-    }, [text])
-
-    const onEnter = useCallback(() => {
-        getData(text)
+        getData(text, 1)
     }, [text])
 
     const onChange = useCallback(
@@ -72,6 +67,7 @@ const Search = function (props) {
     const cleanText = useCallback(() => {
         setItems([])
         setText('')
+        setPage(1)
     }, [])
 
     const getMoreData = useCallback(() => {
@@ -80,22 +76,23 @@ const Search = function (props) {
         if(!isLoading){
             const currentPage = page
             const nextPage = currentPage + 1 
-            onSubmit(lastQuery, nextPage)
+            getData(lastQuery, nextPage)
         }
     },[isLoading, onSubmit, page, lastQuery])
 
+    
     const keyExtractor = useCallback((item, index) => `${item.id}-${index}`, [])
-    const loadingWrapperStyle = { minHeight: dimensions.height / 2.2 }
+    const loadingWrapperStyle = { minHeight: dimensions.height / 2.5 }
     const loading = isLoading && <Loading noImage wrapperStyle={loadingWrapperStyle} />
     return (
         <Container>
             <Input
                 onChange={onChange}
-                onSubmitEditing={onEnter}
+                onSubmitEditing={onSubmit}
                 value={text}
                 autoFocus
                 blurOnSubmit
-                placeholder="Discover Movies or TV Shows">
+                placeholder="Discover Movies">
                 <Button
                     name="search"
                     onPress={onSubmit}
@@ -107,9 +104,8 @@ const Search = function (props) {
                     iconProps={{ size: 32 }}
                 /> }
             </Input>
-            {!isLoading && items.length > 0 && (
-                <ListSection
-                    wrapperStyle={styles.wrapperStyle}
+            {items.length > 0 && (
+                <FlatList
                     renderItem={renderCards}
                     data={items}
                     numColumns={3}
@@ -117,7 +113,7 @@ const Search = function (props) {
                     keyExtractor={keyExtractor}
                     ListFooterComponent={loading}
                     onEndReached={getMoreData}
-                    onEndReachedThreshold={0.2}
+                    onEndReachedThreshold={0.1}
                 />
             )}
         </Container>
@@ -125,13 +121,6 @@ const Search = function (props) {
 }
 
 const styles = StyleSheet.create({
-    wrapperStyle: {
-        backgroundColor: 'transparent',
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
-        elevation: 0,
-        flex: 1,
-    },
     cardStyle: { 
         marginBottom: 10,
         marginHorizontal: 5,
