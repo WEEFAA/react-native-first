@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     },
     genreItem: {
         marginBottom: 4,
+        marginHorizontal: 3,
         color: materialColors.whitePrimary,
     },
 	// body
