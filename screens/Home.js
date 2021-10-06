@@ -130,7 +130,7 @@ const Home = function (props) {
                         />
                         <ListSection
                             wrapperStyle={wrapperStyle}
-                            title="Upcoming"
+                            title="Upcoming Movies"
                             renderItem={renderCards}
                             data={upcoming}
                         />
