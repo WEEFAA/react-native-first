@@ -7,7 +7,10 @@
     "ios": "npx react-native run-ios",
     "start": "npx react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "assemble": "cd ./android &&  gradlew assembleDebug",
+    "build": "npm run bundle && npm run assemble"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.0.7",
