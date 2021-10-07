@@ -7,13 +7,15 @@ import { Input } from '../components/Form'
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Card } from '../components/Card'
 import { Loading } from './../components/Loading'
+import { RichBlack, EggShell } from './../styles'
+import { iOSColors } from 'react-native-typography'
 
 const Search = function (props) {
     const dimensions = useWindowDimensions()
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [isLoading, toggleLoading] = useState(false)
-    const [text, setText] = useState('love sick')
+    const [text, setText] = useState('')
     const [items, setItems] = useState([])
     const [lastQuery, setLastQuery] = useState(null)
 
@@ -43,8 +45,10 @@ const Search = function (props) {
     )
 
     const onSubmit = useCallback(async () => {
-        getData(text, 1)
-    }, [text])
+        let currentQuery = text
+        if(lastQuery !== currentQuery) setItems([])
+        getData(currentQuery, 1)
+    }, [text, lastQuery])
 
     const onChange = useCallback(
         ({ nativeEvent }) => {
@@ -92,49 +96,59 @@ const Search = function (props) {
 
     const keyExtractor = useCallback((item, index) => `${item.id}-${index}`, [])
     const loadingWrapperStyle = { minHeight: dimensions.height / 2 }
+    const initialLoad = items.length === 0 && isLoading
     const loading = isLoading && (
         <Loading noImage wrapperStyle={loadingWrapperStyle} />
     )
+
+    const iconProps = useMemo(() => ({ size: 32, color: iOSColors.white }), [])
     return (
-        <Container>
+        <Container bgColor={RichBlack}>
             <Input
                 onChange={onChange}
                 onSubmitEditing={onSubmit}
                 value={text}
                 autoFocus
                 blurOnSubmit
+                color={iOSColors.white}
+                placeholderTextColor={iOSColors.white}
+                style={styles.input}
                 placeholder="Discover Movies">
                 <Button
                     name="search"
                     onPress={onSubmit}
-                    iconProps={{ size: 32 }}
+                    iconProps={iconProps}
                 />
                 {text !== '' && (
                     <Button
                         name="close"
                         onPress={cleanText}
-                        iconProps={{ size: 32 }}
+                        iconProps={iconProps}
                     />
                 )}
             </Input>
             <ErrorBoundary
+                darkTheme
                 bgColor="transparent"
                 style={styles.errorBound}
                 title="Sorry"
                 description="Cannot render search results properly.">
-                {items.length > 0 && (
-                    <FlatList
-                        renderItem={renderCards}
-                        data={items}
-                        numColumns={3}
-                        horizontal={false}
-                        keyExtractor={keyExtractor}
-                        ListFooterComponent={loading}
-                        onEndReached={getMoreData}
-                        onEndReachedThreshold={0.1}
-                        contentContainerStyle={styles.resultsContainer}
-                    />
-                )}
+                <React.Fragment>
+                    { initialLoad && loading }
+                    {items.length > 0 && (
+                        <FlatList
+                            renderItem={renderCards}
+                            data={items}
+                            numColumns={3}
+                            horizontal={false}
+                            keyExtractor={keyExtractor}
+                            ListFooterComponent={loading}
+                            onEndReached={getMoreData}
+                            onEndReachedThreshold={0.1}
+                            contentContainerStyle={styles.resultsContainer}
+                        />
+                    )}
+                </React.Fragment>
             </ErrorBoundary>
         </Container>
     )
@@ -158,6 +172,9 @@ const styles = StyleSheet.create({
     resultsContainer: {
         alignItems: 'center',
     },
+    input: {
+        borderColor: EggShell
+    }
 })
 
 export default Search
