@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
         style
     ]),
     input: (font, color, style) => StyleSheet.flatten([
+        font,
         {
             height: 'auto',
             borderWidth: 2,
@@ -56,7 +57,6 @@ const styles = StyleSheet.create({
             paddingVertical: 8,
             color: color
         },
-        font,
         style
     ]),
     extra: {
