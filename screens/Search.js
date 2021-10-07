@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
+import ErrorBoundary from '../components/Error'
 import { StyleSheet, useWindowDimensions, FlatList } from 'react-native'
 import { Container } from '../components/Container'
 import { Button } from './../components/Button'
@@ -56,7 +57,9 @@ const Search = function (props) {
         return ({ item }) => {
             const poster = 'poster_path' in item && item.poster_path
             const uri = `${MOVIE_POSTER_HOST}${item.poster_path}`
-            const source = poster ? { uri } : require('./../assets/esom_adaptive_fore.png')
+            const source = poster
+                ? { uri }
+                : require('./../assets/esom_adaptive_fore.png')
             return (
                 <Card
                     resizeMode="cover"
@@ -114,24 +117,33 @@ const Search = function (props) {
                     />
                 )}
             </Input>
-            {items.length > 0 && (
-                <FlatList
-                    renderItem={renderCards}
-                    data={items}
-                    numColumns={3}
-                    horizontal={false}
-                    keyExtractor={keyExtractor}
-                    ListFooterComponent={loading}
-                    onEndReached={getMoreData}
-                    onEndReachedThreshold={0.1}
-                    contentContainerStyle={styles.resultsContainer}
-                />
-            )}
+            <ErrorBoundary
+                bgColor="transparent"
+                style={styles.errorBound}
+                title="Sorry"
+                description="Cannot render search results properly.">
+                {items.length > 0 && (
+                    <FlatList
+                        renderItem={renderCards}
+                        data={items}
+                        numColumns={3}
+                        horizontal={false}
+                        keyExtractor={keyExtractor}
+                        ListFooterComponent={loading}
+                        onEndReached={getMoreData}
+                        onEndReachedThreshold={0.1}
+                        contentContainerStyle={styles.resultsContainer}
+                    />
+                )}
+            </ErrorBoundary>
         </Container>
     )
 }
 
 const styles = StyleSheet.create({
+    errorBound: {
+        flex: 1,
+    },
     cardStyle: {
         marginBottom: 10,
         marginHorizontal: 5,
@@ -141,11 +153,11 @@ const styles = StyleSheet.create({
     },
     imageStyle: {
         borderRadius: 32,
-        height: 180
+        height: 180,
     },
     resultsContainer: {
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+    },
 })
 
 export default Search
