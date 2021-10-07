@@ -12,7 +12,6 @@ const PopularMovies = props => {
 	const [endpoint] = useState('/movie/popular')
     return (
         <ErrorBoundary
-            darkTheme
             bgColor="transparent"
             style={styles.errorBound}
             title="Sorry"
