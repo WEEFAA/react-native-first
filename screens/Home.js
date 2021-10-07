@@ -1,9 +1,13 @@
 import 'allsettled-polyfill'
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import ErrorBoundary from '../components/Error'
 import { Container } from './../components/Container'
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Slider } from './../components/Slider'
 import { ListSection } from './../components/Sections'
+import { Card } from './../components/Card'
+import { Loading } from './../components/Loading'
+import { RichBlack } from './../styles'
 import {
     RefreshControl,
     ScrollView,
@@ -11,9 +15,6 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native'
-import { Card } from './../components/Card'
-import { Loading } from './../components/Loading'
-import { RichBlack } from './../styles'
 
 const styles = StyleSheet.create({
     others: {
@@ -27,6 +28,9 @@ const styles = StyleSheet.create({
     cardImage: {
         height: 180,
         borderRadius: 18,
+    },
+    errorBound: {
+        minHeight: 350,
     },
 })
 
@@ -122,51 +126,71 @@ const Home = function (props) {
     const onRefresh = useCallback(() => {
         fetchTopRated()
         fetchOthers()
-    },[])
+    }, [])
 
     const wrapperStyle = { marginBottom: 20 }
     const loadingComponentHeight = { height: dimensions.height / 1.5 }
     const sliderMinHeight = useMemo(() => dimensions.height / 1.5, [dimensions])
-    const images = useMemo(() => (topRated.map(
-        item => `${MOVIE_POSTER_HOST}${item.poster_path}`,
-    )), [topRated])
+    const images = useMemo(
+        () => topRated.map(item => `${MOVIE_POSTER_HOST}${item.poster_path}`),
+        [topRated],
+    )
 
     return (
         <Container bgColor={RichBlack}>
-            <ScrollView 
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-                {sliderLoading ? (
-                    <Loading wrapperStyle={loadingComponentHeight} />
-                ) : (
-                    <Slider
-                        minHeight={sliderMinHeight}
-                        images={images}
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
                     />
-                )}
-                {othersLoading ? (
-                    <Loading noImage wrapperStyle={loadingComponentHeight} />
-                ) : (
-                    <View style={styles.others}>
-                        <ListSection
-                            wrapperStyle={wrapperStyle}
-                            title="Popular"
-                            renderItem={renderCards}
-                            data={popular}
+                }>
+                <ErrorBoundary
+                    darkTheme
+                    bgColor="transparent"
+                    style={styles.errorBound}
+                    title="Sorry"
+                    description="Cannot render carousel properly.">
+                    {sliderLoading ? (
+                        <Loading wrapperStyle={loadingComponentHeight} />
+                    ) : (
+                        <Slider minHeight={sliderMinHeight} images={images} />
+                    )}
+                </ErrorBoundary>
+                <ErrorBoundary
+                    darkTheme
+                    bgColor="transparent"
+                    style={styles.errorBound}
+                    title="Sorry"
+                    description="Cannot render sliders properly.">
+                    {othersLoading ? (
+                        <Loading
+                            noImage
+                            wrapperStyle={loadingComponentHeight}
                         />
-                        <ListSection
-                            wrapperStyle={wrapperStyle}
-                            title="Now Playing"
-                            renderItem={renderCards}
-                            data={nowPlaying}
-                        />
-                        <ListSection
-                            wrapperStyle={wrapperStyle}
-                            title="Upcoming Movies"
-                            renderItem={renderCards}
-                            data={upcoming}
-                        />
-                    </View>
-                )}
+                    ) : (
+                        <View style={styles.others}>
+                            <ListSection
+                                wrapperStyle={wrapperStyle}
+                                title="Popular"
+                                renderItem={renderCards}
+                                data={popular}
+                            />
+                            <ListSection
+                                wrapperStyle={wrapperStyle}
+                                title="Now Playing"
+                                renderItem={renderCards}
+                                data={nowPlaying}
+                            />
+                            <ListSection
+                                wrapperStyle={wrapperStyle}
+                                title="Upcoming Movies"
+                                renderItem={renderCards}
+                                data={upcoming}
+                            />
+                        </View>
+                    )}
+                </ErrorBoundary>
             </ScrollView>
         </Container>
     )
