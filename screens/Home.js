@@ -4,7 +4,13 @@ import { Container } from './../components/Container'
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Slider } from './../components/Slider'
 import { ListSection } from './../components/Sections'
-import { Text, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
+import {
+    Text,
+    ScrollView,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+} from 'react-native'
 import { Card } from './../components/Card'
 import { Loading } from './../components/Loading'
 import { RichBlack } from './../styles'
@@ -14,6 +20,13 @@ const styles = StyleSheet.create({
         marginTop: 15,
         alignItems: 'center',
         paddingHorizontal: 7,
+    },
+    cardWrapper: {
+        marginRight: 10,
+    },
+    cardImage: {
+        height: 180,
+        borderRadius: 18,
     },
 })
 
@@ -86,12 +99,19 @@ const Home = function (props) {
 
     const renderCards = useMemo(() => {
         return ({ item }) => {
+            const poster = 'poster_path' in item && item.poster_path
             const uri = `${MOVIE_POSTER_HOST}${item.poster_path}`
-            const style = { marginRight: 10 }
+            const source = poster
+                ? { uri }
+                : require('./../assets/esom_adaptive_fore.png')
+
             return (
-                <Card item={item} source={{ uri }} wrapperStyle={style}>
-                    <Text>Hello</Text>
-                </Card>
+                <Card
+                    item={item}
+                    source={source}
+                    style={styles.cardImage}
+                    wrapperStyle={styles.cardWrapper}
+                />
             )
         }
     }, [])
@@ -99,6 +119,9 @@ const Home = function (props) {
     const wrapperStyle = { marginBottom: 20 }
     const loadingComponentHeight = { height: dimensions.height / 1.5 }
     const sliderMinHeight = useMemo(() => dimensions.height / 1.5, [dimensions])
+    const images = useMemo(() => (topRated.map(
+        item => `${MOVIE_POSTER_HOST}${item.poster_path}`,
+    )), [topRated])
     return (
         <Container bgColor={RichBlack}>
             <ScrollView>
@@ -107,9 +130,7 @@ const Home = function (props) {
                 ) : (
                     <Slider
                         minHeight={sliderMinHeight}
-                        images={topRated.map(
-                            item => `${MOVIE_POSTER_HOST}${item.poster_path}`,
-                        )}
+                        images={images}
                     />
                 )}
                 {othersLoading ? (
