@@ -1,12 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import ErrorBoundary from '../components/Error'
 import { Movies, Items } from './../components/Movies'
+import { StyleSheet } from 'react-native'
 
+const styles = StyleSheet.create({
+    errorBound: {
+        flex: 1
+    }
+})
 const PopularMovies = props => {
-	const [endpoint, setEndpoint] = useState('/movie/popular')
+	const [endpoint] = useState('/movie/popular')
     return (
-        <Movies endpoint={endpoint}>
-            <Items />
-        </Movies>
+        <ErrorBoundary
+            darkTheme
+            bgColor="transparent"
+            style={styles.errorBound}
+            title="Sorry"
+            description="Cannot render movies properly.">
+            <Movies endpoint={endpoint}>
+                <Items />
+            </Movies>
+        </ErrorBoundary>
     )
 }
 
