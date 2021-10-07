@@ -123,9 +123,14 @@ const Home = function (props) {
         }
     }, [])
 
-    const onRefresh = useCallback(() => {
-        fetchTopRated()
-        fetchOthers()
+    const onRefresh = useCallback(async () => {
+        try{
+            setRefreshing(true)
+            await Promise.allSettled([fetchTopRated(), fetchOthers()])
+            setRefreshing(false)
+        }catch(e){
+            setRefreshing(false)
+        }
     }, [])
 
     const wrapperStyle = { marginBottom: 20 }
