@@ -1,43 +1,47 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { StyleSheet, useWindowDimensions, FlatList, Animated } from 'react-native'
+import { StyleSheet, useWindowDimensions, FlatList, View } from 'react-native'
 import { Container } from '../components/Container'
 import { Button } from './../components/Button'
 import { Input } from '../components/Form'
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Card } from '../components/Card'
 import { Loading } from './../components/Loading'
+import { Title } from './../components/Typography'
 
 const Search = function (props) {
     const dimensions = useWindowDimensions()
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [isLoading, toggleLoading] = useState(false)
-    const [text, setText] = useState('')
+    const [text, setText] = useState('love sick')
     const [items, setItems] = useState([])
     const [lastQuery, setLastQuery] = useState(null)
 
-    const getData = useCallback(async function(query, currentPage = 1){
-        try {
-            toggleLoading(true)
-            const url = `/search/movie`
-            const response = await movies.get(url, {
-                params: {
-                    query: query,
-                    page: currentPage,
-                },
-            })
-            const data = response.data
-            const { results, total_results } = data
-            setTotal(total_results)
-            setItems(currentItems => ([...currentItems, ...results]))
-            setPage(currentPage)
-            setLastQuery(query)
-            toggleLoading(false)
-        } catch (e) {
-            toggleLoading(false)
-        }
-    },[setTotal, setItems, setPage, setLastQuery, toggleLoading, items])
-    
+    const getData = useCallback(
+        async function (query, currentPage = 1) {
+            try {
+                toggleLoading(true)
+                const url = `/search/movie`
+                const response = await movies.get(url, {
+                    params: {
+                        query: query,
+                        page: currentPage,
+                    },
+                })
+                const data = response.data
+                const { results, total_results } = data
+                setTotal(total_results)
+                setItems(currentItems => [...currentItems, ...results])
+                setPage(currentPage)
+                setLastQuery(query)
+                toggleLoading(false)
+            } catch (e) {
+                toggleLoading(false)
+            }
+        },
+        [setTotal, setItems, setPage, setLastQuery, toggleLoading, items],
+    )
+
     const onSubmit = useCallback(async () => {
         getData(text, 1)
     }, [text])
@@ -51,13 +55,15 @@ const Search = function (props) {
 
     const renderCards = useMemo(() => {
         return ({ item }) => {
+            const poster = 'poster_path' in item && item.poster_path
             const uri = `${MOVIE_POSTER_HOST}${item.poster_path}`
+            const source = poster ? { uri } : require('./../assets/esom_adaptive_fore.png')
             return (
                 <Card
-                    resizeMode="stretch"
+                    resizeMode="cover"
                     style={styles.imageStyle}
                     item={item}
-                    source={{ uri }}
+                    source={source}
                     wrapperStyle={styles.cardStyle}
                 />
             )
@@ -68,22 +74,25 @@ const Search = function (props) {
         setItems([])
         setText('')
         setPage(1)
+        toggleLoading(false)
     }, [])
 
     const getMoreData = useCallback(() => {
         // get more data if user is at the bottom
         // and not currently fetching any data
-        if(!isLoading){
+        if (!isLoading) {
+            if (items.length >= total) return
             const currentPage = page
-            const nextPage = currentPage + 1 
+            const nextPage = currentPage + 1
             getData(lastQuery, nextPage)
         }
-    },[isLoading, onSubmit, page, lastQuery])
+    }, [isLoading, onSubmit, page, lastQuery, total, items])
 
-    
     const keyExtractor = useCallback((item, index) => `${item.id}-${index}`, [])
-    const loadingWrapperStyle = { minHeight: dimensions.height / 2.5 }
-    const loading = isLoading && <Loading noImage wrapperStyle={loadingWrapperStyle} />
+    const loadingWrapperStyle = { minHeight: dimensions.height / 2 }
+    const loading = isLoading && (
+        <Loading noImage wrapperStyle={loadingWrapperStyle} />
+    )
     return (
         <Container>
             <Input
@@ -98,11 +107,13 @@ const Search = function (props) {
                     onPress={onSubmit}
                     iconProps={{ size: 32 }}
                 />
-                { text !== '' && <Button
-                    name="close"
-                    onPress={cleanText}
-                    iconProps={{ size: 32 }}
-                /> }
+                {text !== '' && (
+                    <Button
+                        name="close"
+                        onPress={cleanText}
+                        iconProps={{ size: 32 }}
+                    />
+                )}
             </Input>
             {items.length > 0 && (
                 <FlatList
@@ -114,6 +125,7 @@ const Search = function (props) {
                     ListFooterComponent={loading}
                     onEndReached={getMoreData}
                     onEndReachedThreshold={0.1}
+                    contentContainerStyle={styles.resultsContainer}
                 />
             )}
         </Container>
@@ -121,14 +133,19 @@ const Search = function (props) {
 }
 
 const styles = StyleSheet.create({
-    cardStyle: { 
+    cardStyle: {
         marginBottom: 10,
         marginHorizontal: 5,
         padding: 0,
-        flexBasis: "30%"
-    },  
+        flexBasis: '30%',
+        flex: 0,
+    },
     imageStyle: {
-        borderRadius: 32
+        borderRadius: 32,
+        height: 180
+    },
+    resultsContainer: {
+        alignItems: 'center'
     }
 })
 
