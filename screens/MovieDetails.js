@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import ErrorBoundary from '../components/Error'
 import { View, ScrollView, StyleSheet, Modal } from 'react-native'
 import { Container } from './../components/Container'
 import { Details, Key, Value } from './../components/Detail'
@@ -73,103 +74,112 @@ const MovieDetails = props => {
                         />
                     )}
                 </Slider>
-                <Container noDefaultColor>
-                    <View style={styles.container}>
-                        <View style={styles.titleContainer}>
-                            <Title
-                                darkTheme
-                                font="title1"
-                                style={styles.titleText}>
-                                {data.title}
-                            </Title>
+                <ErrorBoundary
+                    darkTheme
+                    bgColor="transparent"
+                    style={styles.errorBound}
+                    title="Sorry"
+                    description="Cannot render movie information properly.">
+                    <Container noDefaultColor>
+                        <View style={styles.container}>
+                            <View style={styles.titleContainer}>
+                                <Title
+                                    darkTheme
+                                    font="title1"
+                                    style={styles.titleText}>
+                                    {data.title}
+                                </Title>
+                            </View>
+                            <View style={styles.genresContainer}>
+                                {data.genres &&
+                                    data.genres.map(genre => (
+                                        <HumanBody
+                                            font="footnote"
+                                            style={styles.genreItem}
+                                            key={genre.id}>
+                                            {genre.name}
+                                        </HumanBody>
+                                    ))}
+                            </View>
+                            <StarRating
+                                containerStyle={styles.center}
+                                disabled={false}
+                                maxStars={5}
+                                rating={rating}
+                                halfStarColor={iOSColors.yellow}
+                                fullStarColor={iOSColors.yellow}
+                            />
+                            <View style={styles.bodyContainer}>
+                                <HumanBody darkTheme>{data.overview}</HumanBody>
+                            </View>
+                            <Container
+                                noDefaultColor
+                                style={styles.detailsContainer}>
+                                <Details
+                                    style={styles.details}
+                                    borderStyle="dashed">
+                                    <Key>
+                                        <HumanBody darkTheme>
+                                            Release Date:
+                                        </HumanBody>
+                                    </Key>
+                                    <Value>
+                                        <HumanBody darkTheme>
+                                            {dateformat(
+                                                data.release_date,
+                                                'mediumDate',
+                                            )}
+                                        </HumanBody>
+                                    </Value>
+                                    <Key>
+                                        <HumanBody darkTheme>Status:</HumanBody>
+                                    </Key>
+                                    <Value>
+                                        <HumanBody darkTheme>
+                                            {data.status}
+                                        </HumanBody>
+                                    </Value>
+                                    <Key>
+                                        <HumanBody darkTheme>
+                                            Revenue:
+                                        </HumanBody>
+                                    </Key>
+                                    <Value>
+                                        <HumanBody darkTheme>
+                                            {data.revenue}
+                                        </HumanBody>
+                                    </Value>
+                                    <Key>
+                                        <HumanBody darkTheme>
+                                            Runtime (in minutes):
+                                        </HumanBody>
+                                    </Key>
+                                    <Value>
+                                        <HumanBody darkTheme>
+                                            {data.runtime}
+                                        </HumanBody>
+                                    </Value>
+                                    <Key>
+                                        <HumanBody darkTheme>18+:</HumanBody>
+                                    </Key>
+                                    <Value>
+                                        <HumanBody darkTheme>
+                                            {data.adult ? 'YES' : 'NO'}
+                                        </HumanBody>
+                                    </Value>
+                                    <Key>
+                                        <HumanBody darkTheme>Budget:</HumanBody>
+                                    </Key>
+                                    <Value>
+                                        <HumanBody darkTheme>
+                                            {data.budget}
+                                        </HumanBody>
+                                    </Value>
+                                </Details>
+                            </Container>
                         </View>
-                        <View style={styles.genresContainer}>
-                            {data.genres &&
-                                data.genres.map(genre => (
-                                    <HumanBody
-                                        font="footnote"
-                                        style={styles.genreItem}
-                                        key={genre.id}>
-                                        {genre.name}
-                                    </HumanBody>
-                                ))}
-                        </View>
-                        <StarRating
-                            containerStyle={styles.center}
-                            disabled={false}
-                            maxStars={5}
-                            rating={rating}
-                            halfStarColor={iOSColors.yellow}
-                            fullStarColor={iOSColors.yellow}
-                        />
-                        <View style={styles.bodyContainer}>
-                            <HumanBody darkTheme>{data.overview}</HumanBody>
-                        </View>
-                        <Container
-                            noDefaultColor
-                            style={styles.detailsContainer}>
-                            <Details
-                                style={styles.details}
-                                borderStyle="dashed">
-                                <Key>
-                                    <HumanBody darkTheme>
-                                        Release Date:
-                                    </HumanBody>
-                                </Key>
-                                <Value>
-                                    <HumanBody darkTheme>
-                                        {dateformat(
-                                            data.release_date,
-                                            'mediumDate',
-                                        )}
-                                    </HumanBody>
-                                </Value>
-                                <Key>
-                                    <HumanBody darkTheme>Status:</HumanBody>
-                                </Key>
-                                <Value>
-                                    <HumanBody darkTheme>
-                                        {data.status}
-                                    </HumanBody>
-                                </Value>
-                                <Key>
-                                    <HumanBody darkTheme>Revenue:</HumanBody>
-                                </Key>
-                                <Value>
-                                    <HumanBody darkTheme>
-                                        {data.revenue}
-                                    </HumanBody>
-                                </Value>
-                                <Key>
-                                    <HumanBody darkTheme>
-                                        Runtime (in minutes):
-                                    </HumanBody>
-                                </Key>
-                                <Value>
-                                    <HumanBody darkTheme>
-                                        {data.runtime}
-                                    </HumanBody>
-                                </Value>
-                                <Key>
-                                    <HumanBody darkTheme>18+:</HumanBody>
-                                </Key>
-                                <Value>
-                                    <HumanBody darkTheme>
-                                        {data.adult ? 'YES' : 'NO'}
-                                    </HumanBody>
-                                </Value>
-                                <Key>
-                                    <HumanBody darkTheme>Budget:</HumanBody>
-                                </Key>
-                                <Value>
-                                    <HumanBody darkTheme>
-                                        {data.budget}
-                                    </HumanBody>
-                                </Value>
-                            </Details>
-                        </Container>
-                    </View>
-                </Container>
+                    </Container>
+                </ErrorBoundary>
             </ScrollView>
             <VideoModal
                 visible={showModal}
@@ -193,6 +203,9 @@ function VideoModal({ close, ...props }) {
 }
 
 const styles = StyleSheet.create({
+    errorBound: {
+        minHeight: 350,
+    },
     center: {
         alignSelf: 'center',
         marginTop: 20,
