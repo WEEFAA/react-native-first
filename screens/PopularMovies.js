@@ -1,10 +1,13 @@
-import React from 'react';
-import {PopularMovies, Items} from './../components/Movies';
+import React, { useEffect, useState } from 'react'
+import { Movies, Items } from './../components/Movies'
 
-export default props => {
-  return (
-    <PopularMovies>
-      <Items/>
-    </PopularMovies>
-  );
-};
+const PopularMovies = props => {
+	const [endpoint, setEndpoint] = useState('/movie/popular')
+    return (
+        <Movies endpoint={endpoint}>
+            <Items />
+        </Movies>
+    )
+}
+
+export default PopularMovies
