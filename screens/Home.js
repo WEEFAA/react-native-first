@@ -5,7 +5,7 @@ import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Slider } from './../components/Slider'
 import { ListSection } from './../components/Sections'
 import {
-    Text,
+    RefreshControl,
     ScrollView,
     StyleSheet,
     View,
@@ -40,6 +40,9 @@ const Home = function (props) {
     const [popular, setPopular] = useState([])
     const [nowPlaying, setNowPlaying] = useState([])
     const [upcoming, setUpcoming] = useState([])
+
+    // refresh
+    const [refreshing, setRefreshing] = useState(false)
 
     const fetchTopRated = useCallback(async () => {
         try {
@@ -116,15 +119,22 @@ const Home = function (props) {
         }
     }, [])
 
+    const onRefresh = useCallback(() => {
+        fetchTopRated()
+        fetchOthers()
+    },[])
+
     const wrapperStyle = { marginBottom: 20 }
     const loadingComponentHeight = { height: dimensions.height / 1.5 }
     const sliderMinHeight = useMemo(() => dimensions.height / 1.5, [dimensions])
     const images = useMemo(() => (topRated.map(
         item => `${MOVIE_POSTER_HOST}${item.poster_path}`,
     )), [topRated])
+
     return (
         <Container bgColor={RichBlack}>
-            <ScrollView>
+            <ScrollView 
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
                 {sliderLoading ? (
                     <Loading wrapperStyle={loadingComponentHeight} />
                 ) : (
