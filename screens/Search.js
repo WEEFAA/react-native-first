@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { StyleSheet, useWindowDimensions, FlatList, View } from 'react-native'
+import { StyleSheet, useWindowDimensions, FlatList } from 'react-native'
 import { Container } from '../components/Container'
 import { Button } from './../components/Button'
 import { Input } from '../components/Form'
 import { movies, MOVIE_POSTER_HOST } from './../utils/axios'
 import { Card } from '../components/Card'
 import { Loading } from './../components/Loading'
-import { Title } from './../components/Typography'
 
 const Search = function (props) {
     const dimensions = useWindowDimensions()
