@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types'
-import Theme from './../styles';
 import { useNavigation } from '@react-navigation/native'
 import { Push } from './FlatList';
 import { movies as MoviesApi, MOVIE_POSTER_HOST } from './../utils/axios';
@@ -12,7 +11,7 @@ import { Details, Key, Value } from './Detail'
 import NAVS from './../navigations';
 import { systemWeights } from 'react-native-typography';
 
-const PopularMovieContext = React.createContext({});
+const MoviesContext = React.createContext({});
 
 const styles = StyleSheet.create({
     itemsContainer: {
@@ -71,51 +70,55 @@ const styles = StyleSheet.create({
     }
 });
 
-const title = StyleSheet.compose(styles.title, Theme.text_rich_black);
-const description = StyleSheet.compose(
-    styles.description,
-    Theme.text_rich_black,
-);
-
-const popularMoviesPropTypes = {
-
+const moviesPropTypes = {
+    endpoint: PropTypes.string.isRequired
 }
 
-export const PopularMovies = function (props) {
+const moviesDefaultProps = {
+    endpoint: "/movie/popular"
+}
+
+export const Movies = function ({endpoint, ...props}) {
     const [movies, setMovies] = React.useState([]);
     const [loading, toggleLoading] = React.useState(false);
     const [page, setPage] = React.useState(1)
 
-    const getMovies = useCallback(async function (currentPage = 1) {
+    const getMovies = useCallback(async function (currentPage = 1, currentItems = []) {
         try {
             toggleLoading(true);
             const params = { page: currentPage }
-            const resp = await MoviesApi.get('/movie/popular', { params });
+            const resp = await MoviesApi.get(endpoint, { params });
             const { results } = resp.data;
-            setMovies([...movies, ...results]);
+            setMovies([...currentItems, ...results]);
             setPage(currentPage)
             toggleLoading(false);
         } catch (e) {
             toggleLoading(false);
         }
-    },[movies])
+    },[endpoint])
 
+    
     React.useEffect(() => {
-        getMovies();
-    }, []);
-
+        setPage(1)
+        setMovies([]);
+        toggleLoading(false)
+        getMovies()
+    }, [endpoint]);
+    
     const state = React.useMemo(() => {
         return {
             movies,
             loading,
             getMovies,
-            page
+            page,
+            endpoint
         };
-    }, [loading, movies, getMovies, page]);
+    }, [loading, movies, getMovies, page, endpoint]);
+
     return (
-        <PopularMovieContext.Provider value={state}>
+        <MoviesContext.Provider value={state}>
             <Container>{props.children}</Container>
-        </PopularMovieContext.Provider>
+        </MoviesContext.Provider>
     );
 };
 
@@ -126,7 +129,7 @@ const itemPropTypes = {
 export const Items = function (props) {
     const dimensions = useWindowDimensions()
     const navigation = useNavigation()
-    const state = React.useContext(PopularMovieContext);
+    const state = React.useContext(MoviesContext);
 
     const onPressLearnMore = useCallback(function (id, title) {
         // redirect to details page
@@ -180,9 +183,9 @@ export const Items = function (props) {
         if(!state.loading){
             const currentPage = state.page
             const nextPage = currentPage + 1 
-            state.getMovies(nextPage)
+            state.getMovies(nextPage, state.movies)
         }
-    },[state.loading, state.getMovies, state.page])
+    },[state.loading, state.getMovies, state.page, state.movies])
 
     const keyExtractor = useCallback((item, index) => `${item.id}-${index}`, [])
 
@@ -204,5 +207,6 @@ export const Items = function (props) {
     );
 };
 
-PopularMovies.propTypes = popularMoviesPropTypes
+Movies.propTypes = moviesPropTypes
+Movies.defaultProps = moviesDefaultProps
 Items.propTypes = itemPropTypes
